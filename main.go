@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
 	"golang.org/x/net/html"
 )
 
@@ -132,13 +134,16 @@ func TranslateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// 使用 flag 包解析命令行参数
+	port := flag.String("port", "5000", "Port to run the server on")
+	flag.Parse()
+
 	// 设置路由和处理函数
 	http.HandleFunc("/translate_a/single", TranslateHandler)
 
-	// 启动服务器
-	port := ":5000"
-	fmt.Printf("Server started on %s\n", port)
-	if err := http.ListenAndServe(port, nil); err != nil {
+	// 启动服务器，使用指定的端口
+	fmt.Printf("Server started on :%s\n", *port)
+	if err := http.ListenAndServe(":"+*port, nil); err != nil {
 		fmt.Printf("Error starting server: %v\n", err)
 	}
 }
